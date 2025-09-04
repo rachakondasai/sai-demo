@@ -21,8 +21,8 @@ This doc explains **what reads what**, **who applies what**, and **how the files
 flowchart LR
     Dev[Developer commit / PR] --> Repo[GitHub Repo]
     subgraph ArgoCD
-      RS[Repo Server\n(fetch repo + Helm render)]
-      AC[Application Controller\n(diff, apply, self-heal, prune)]
+      RS[Repo Server (fetch repo + Helm render)]
+      AC[Application Controller (diff, apply, self-heal, prune)]
     end
     Repo --> RS
     RS -->|helm template (values.yaml + templates/*)| AC
@@ -41,14 +41,14 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    App[ArgoCD Application.yaml] --> SRC[spec.source\n(repoURL/path/revision)]
+    App[ArgoCD Application.yaml] --> SRC[spec.source (repoURL/path/revision)]
     SRC --> RS[ArgoCD Repo-Server]
     RS --> Helm[Helm Engine]
 
     subgraph Chart
-      ChartY[Chart.yaml\n(chart metadata)]
-      Values[values.yaml\n(defaults: replicas, image, service)]
-      Tpls[templates/*.yaml\n(Go templates use .Values/.Release)]
+      ChartY[Chart.yaml (chart metadata)]
+      Values[values.yaml (defaults: replicas, image, service)]
+      Tpls[templates/*.yaml (Go templates use .Values/.Release)]
     end
 
     ChartY --> Helm
