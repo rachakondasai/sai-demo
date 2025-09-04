@@ -25,7 +25,7 @@ flowchart LR
       AC[Application Controller: diff, apply, self-heal, prune]
     end
     Repo --> RS
-    RS -->|helm template (values.yaml + templates/*)| AC
+    RS -->|helm template values.yaml + templates/| AC
     AC -->|Server-side apply| API[(Kubernetes API)]
 
     subgraph NS[Namespace: nginx-sample]
