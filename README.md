@@ -13,16 +13,16 @@ This doc explains **what reads what**, **who applies what**, and **how the files
 
 ---
 
-## 2) High-Level Architecture
+## 2) High-level architecture
 
-### Flow 1: Commit to Deployment
+### Flow A: Git to Cluster Deployment
 
 ```mermaid
 flowchart LR
     Dev[Developer commit / PR] --> Repo[GitHub Repo]
     subgraph ArgoCD
-      RS[Repo Server: fetch repo + Helm render]
-      AC[Application Controller: diff, apply, self-heal, prune]
+      RS[Repo Server]
+      AC[App Controller]
     end
     Repo --> RS
     RS -->|helm template values.yaml + templates/| AC
@@ -39,16 +39,23 @@ flowchart LR
     User[Client/Tester] -->|HTTP 80| SVC
 ```
 
+**Explanation**:  
+- Repo Server fetches the source and renders Helm templates.  
+- App Controller compares desired vs live state, applies changes, and self-heals.  
+- Kubernetes API creates Deployments, ReplicaSets, Pods, and Services.  
+
+### Flow B: Helm Chart Processing
+
 ```mermaid
 flowchart LR
-    App[ArgoCD Application.yaml] --> SRC[spec.source: repoURL/path/revision]
+    App[ArgoCD Application.yaml] --> SRC[spec.source]
     SRC --> RS[ArgoCD Repo-Server]
     RS --> Helm[Helm Engine]
 
     subgraph Chart
-      ChartY[Chart.yaml: chart metadata]
-      Values[values.yaml: defaults - replicas, image, service]
-      Tpls[templates/*.yaml: Go templates use .Values/.Release]
+      ChartY[Chart.yaml]
+      Values[values.yaml]
+      Tpls[templates/*.yaml]
     end
 
     ChartY --> Helm
@@ -58,3 +65,16 @@ flowchart LR
     Helm --> Manifests[Rendered K8s YAML]
     Manifests --> AC[ArgoCD App-Controller] --> API[(Kubernetes API)]
 ```
+
+**Explanation**:  
+- `Chart.yaml` defines chart metadata.  
+- `values.yaml` provides defaults (replicas, image, service).  
+- `templates/*.yaml` are Go templates rendered with values.  
+- Helm outputs Kubernetes manifests which ArgoCD applies via the App Controller.  
+
+---
+## Key Takeaways
+- Git is always the single source of truth.  
+- ArgoCD continuously reconciles desired vs live state.  
+- Helm enables flexible configuration via `values.yaml` and templates.  
+- The system is self-healing and prunes drift automatically.  
