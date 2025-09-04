@@ -37,10 +37,9 @@ flowchart LR
     API --> SVC
 
     User[Client/Tester] -->|HTTP 80| SVC
+```
 
-
-
-
+```mermaid
 flowchart LR
     App[ArgoCD Application.yaml] --> SRC[spec.source\n(repoURL/path/revision)]
     SRC --> RS[ArgoCD Repo-Server]
@@ -58,3 +57,4 @@ flowchart LR
 
     Helm --> Manifests[Rendered K8s YAML]
     Manifests --> AC[ArgoCD App-Controller] --> API[(Kubernetes API)]
+```
