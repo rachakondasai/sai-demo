@@ -1,8 +1,3 @@
----
-
-## `projects/nginx-sample-architecture.md`
-
-```markdown
 # 🧭 NGINX Sample — Architecture & End-to-End Flow
 
 This doc explains **what reads what**, **who applies what**, and **how the files link up** from Git → ArgoCD → Helm → Kubernetes.
@@ -19,6 +14,8 @@ This doc explains **what reads what**, **who applies what**, and **how the files
 ---
 
 ## 2) High-Level Architecture
+
+### Flow 1: Commit to Deployment
 
 ```mermaid
 flowchart LR
